@@ -51,24 +51,16 @@ la_result3_fm<-NULL
 la_result4_fm<-NULL
 
 
-rid_result<-NULL
-rid_result2<-NULL
-rid_result3<-NULL
-rid_result4<-NULL
-
-rid_result_fm<-NULL
-rid_result2_fm<-NULL
-rid_result3_fm<-NULL
-rid_result4_fm<-NULL
 for(q in 1:10){
   
   # la<-0
   
   final_result<-list()
   seqq<-c(1,10,30,50,100,300,500,1000)
+  # seqq<-c(1,10,30,50)
   
   comments<-      (  as.character(polar_review))
-  sam<-sample(1:length(comments),num_sample)
+  sam<-sample(1:length(comments),num_sample*1)
   # length(polar_review)
   library(stringr)
   
@@ -86,21 +78,20 @@ for(q in 1:10){
   
   
   
-  gun<-names(sort(toq,decreasing = T)[1:round(length(toq)*0.01,0)])[-1]
-  gun
+
+  library(lexicon)
+  data(hash_sentiment_sentiword)
   
-  ll<- sapply(gun,function(x){str_detect(cos,x)})
-  ll2<-apply(ll,2,which)
-  # sort(ll2,decreasing = T)
-  # head(ll2)
+  hash_sentiment_sentiword[hash_sentiment_sentiword$x %in% "like",]
+  hash_sentiment_sentiword[hash_sentiment_sentiword$x %in% "love",]
+  hash_sentiment_sentiword[hash_sentiment_sentiword$x %in% "best",]
+  hash_sentiment_sentiword[hash_sentiment_sentiword$x %in% "good",]
 
   
   
-  # ? t.test
-  
   head(cos)
-  for(la in 1:0){
-   se 
+  for(la in 1:1){
+    se 
     # la<-0
     ##basemodel
     poc_list<-list()
@@ -115,21 +106,26 @@ for(q in 1:10){
       ss<-(sample(1:length(cos),length(cos),replace=T))
       
       
-# 
-#       bbi<-ifelse(score[sam]>3,1,0)
-#       bbi2<-1-table(bbi)/length(bbi)
-#       bbi3<-bbi2[match(bbi,names(bbi2))]
-#       bbi4<-bbi3/sum(bbi3)
-# 
-#         ss<-(sample(1:length(cos),length(cos),prob=bbi4,replace=T))
-
+      # 
+      #       bbi<-ifelse(score[sam]>3,1,0)
+      #       bbi2<-1-table(bbi)/length(bbi)
+      #       bbi3<-bbi2[match(bbi,names(bbi2))]
+      #       bbi4<-bbi3/sum(bbi3)
+      # 
+      #         ss<-(sample(1:length(cos),length(cos),prob=bbi4,replace=T))
+      
       cos2<-cos[ss]
       
       
       load("score.RData")
       score2<-score[sam]
+      
       score3<-score2[ss]
       table(score3)
+      ims<-which(score3==3)
+      
+      # score3<-score3[-ims]
+      # sp_cos_sh<-str_split(cos2[-ims]," ")
       
       sp_cos_sh<-str_split(cos2," ")
       mean(sapply(sp_cos_sh,length))
@@ -137,7 +133,7 @@ for(q in 1:10){
       head(tas)
       length(tas)
       
-      tas2<-tas[tas >1]
+      tas2<-tas[tas >4]
       length(tas2)
       
       length(names(tas2))
@@ -164,7 +160,8 @@ for(q in 1:10){
       dim(dtm)
       i<-1
       i
-      for(i in 1:length(cos2)){
+      sp_cos_sh[[1]]
+      for(i in 1:length(sp_cos_sh)){
         
         matin<-match(sp_cos_sh[[i]],nat)
         tt<-table(matin[!is.na(matin)])
@@ -179,7 +176,7 @@ for(q in 1:10){
       
       
       # dim(dtm)
-     
+      
       # score<-polar_review[,2]
       
       # score<-c(rep(1,1000),rep(0,1000))
@@ -188,11 +185,11 @@ for(q in 1:10){
       whs <- apply(dtm,1,sum) == 0
       real_dtm2<-dtm[!whs,]
       sp_cos3<-cos2[!whs]
-      
+      sum(whs)
       # scorescore3[score3!=3]
       score_one_word<-      ifelse(score3>3,1,0)[!whs]
       
-# table(score_one_word)
+      # table(score_one_word)
       
       
       # good_col<-colnames(dtm)
@@ -200,7 +197,7 @@ for(q in 1:10){
       
       library(glmnet)
       
-      import_vari<-sample(1:ncol(dtm),ncol(dtm)*0.8)
+      import_vari<-sample(1:ncol(dtm),ncol(dtm)*1)
       
       
       
@@ -220,6 +217,7 @@ for(q in 1:10){
       sum(pre2 == score_one_word)/length(score_one_word)
       
       table(pre2)
+      length(pre2)
       table(score_one_word)
       
       
@@ -253,7 +251,7 @@ for(q in 1:10){
       lasso_result<-sum(pred ==gek)/length(pred);lasso_result
       
       
-      coes<-coef(fit2,s=0.001)
+      coes<-coef(fit2,s=0.01)
       dim(coes)
       cod<-as.matrix(coes)
       hist(cod)
@@ -320,16 +318,18 @@ for(q in 1:10){
       table(score_one_word[str_detect(cos,names(ns[1]))])
       
       
-}
-    
-    # warnings()
-
-    for(qq in 1:length(poc_list)){
-      poc_list[[qq]]<-poc_list[[qq]]*lasso_result2[qq]
-      neg_list[[qq]]<-neg_list[[qq]]*lasso_result2[qq]
-      
-      int_list[[qq]]<-int_list[[qq]]*lasso_result2[qq]
     }
+    # 0.80285413
+    mean(lasso_result2)
+    # 0.764
+    # warnings()
+    
+    # for(qq in 1:length(poc_list)){
+    #   poc_list[[qq]]<-poc_list[[qq]]*lasso_result2[qq]
+    #   neg_list[[qq]]<-neg_list[[qq]]*lasso_result2[qq]
+    # 
+    #   int_list[[qq]]<-int_list[[qq]]*lasso_result2[qq]
+    # }
     
     
     upc<-unlist(poc_list)
@@ -361,9 +361,9 @@ for(q in 1:10){
     
     length(poc3);length(neg3)
     
-   # mpn<- min(length(poc3),length(neg3))
-  
-     # poc3<-sqrt(poc3)
+    # mpn<- min(length(poc3),length(neg3))
+    
+    # poc3<-sqrt(poc3)
     # neg3<- -sqrt(abs(neg3))
     
     # save(poc3,file=paste0(la,"-",se,"-",q,"positive_word.RData"))
@@ -383,18 +383,24 @@ for(q in 1:10){
     won_result2_fm<-NULL
     won_result3_fm<-NULL
     won_result4_fm<-NULL
+    sen_result_fm<-NULL
+    sen_result<-NULL
+    lenw<-c()
     for(se in seqq){
       
       
       for(ww in 1:1){
         
-        se<-10
+        # se<-1
         getwd()
         
         if(ww ==1){
           wm<-"orig_w2v"
-          model<-read.vectors("review.bin")
+          # model<-read.vectors("review3.bin")
+          # load("googlewv.RData")
+          # save(model,file="model.RData")
           
+          load("model.RData")
           model<-(model)[!str_detect(rownames(model),"\\d$"),]
           rownames(model)
           # erw2
@@ -406,26 +412,26 @@ for(q in 1:10){
           
           sksk<-ifelse(score2>3,1,0)
           sksk2<-table(sksk)[1]/table(sksk)[2]
-           sksk2
-
-           al<-length(neg3)/(length(poc3))
-           sksk2<-al
-           if(al <1){
-             sksk2<-length(poc3)/(length(neg3))             
-           }
-           
+          sksk2
+          
+          al<-length(neg3)/(length(poc3))
+          sksk2<-al
+          if(al <1){
+            sksk2<-length(poc3)/(length(neg3))             
+          }
+          
           ap<-abs(mean(sort(poc3,decreasing = T)[1:10]))
           ap2<-abs(mean(sort(neg3,decreasing = F)[1:10]))
           al<-ap/ap2 
           sksk2<-al 
           if(al >1){
-           sksk2<-   ap2/ap
+            sksk2<-   ap2/ap
             
           }
           
           pos_wrod<-list()
           
-           # for(i in poi){
+          # for(i in poi){
           i<-10
           length(allc)
           # se<-500
@@ -438,17 +444,15 @@ for(q in 1:10){
           # li2<-1:length(poc4) *li
           se2<-se- round(li2)+1
           head(poc4)
-       
-           se2<-ceiling(1/se2 *se)+1
-           head(se2)
-          # ts.plot(se2)
-           i<-1021
+          
+          se2<-ceiling(1/se2 *se)+1
+
           se
-           if(se ==1){
-             se2<-rep(1,length(poc4))
-           }
-           
-           # se2<-rep(se,length(poc4))
+          if(se ==1){
+            se2<-rep(1,length(poc4))
+          }
+          
+          # se2<-rep(se,length(poc4))
           for(i in 1:length(poc4)){
             
             nap<-nearest_to(model,model[[names(poc4[i])]],se2[i])
@@ -462,7 +466,7 @@ for(q in 1:10){
             
             
             if(length(nap)==0){
-                
+              
               pos_wrod[[i]]<-poc4[i]
               next;
             }
@@ -482,10 +486,10 @@ for(q in 1:10){
           sort(top,decreasing = T)[1:30]
           
           
-            pos_word2<-tapply((pos_wrod2),names(pos_wrod2),sum)
+          pos_word2<-tapply((pos_wrod2),names(pos_wrod2),sum)
+          # pos_word2<-tapply((pos_wrod2),names(pos_wrod2),max)
           
           
-
           neg_wrod<-list()
           neg4<- sort(neg3,decreasing = F)
           # neg4<-neg4[1:mpn]
@@ -523,22 +527,37 @@ for(q in 1:10){
               next;
             }
             neg_wrod[[i]]<-c(neg4[i] * (1-nap))
-          
+            # cat("\t",i)
+            # print(neg3[i] * abs(1-nap))
             
           }
-       
+          
+          # neg_wrod<-c(neg_wrod,neg3)
           neg_wrod2<-do.call("c",neg_wrod)
           neg_word2<-tapply((neg_wrod2),names(neg_wrod2),sum)
-    
+          # neg_word2<-tapply((neg_wrod2),names(neg_wrod2),min)
+          
+          pix<-sapply(neg_wrod,function(x){ sum(names(x) %in% "horrible")}) == 1
+          neg_wrod[pix]
+          
+          
           sort(neg_word2,decreasing = F)[1:10]
           sort(pos_word2,decreasing = T)[1:10]
-    
+          
+          length(poc3);length(neg3)
+          length(pos_word2)
+          length(neg_word2)
+          
+          
+          # warnings()  
+          
+          
           # # 
           pos_word2<-  pos_word2[!names(pos_word2) %in% names(neg3)]
           neg_word2<-  neg_word2[!names(neg_word2) %in% names(poc3)]
           pos_word2<- (sqrt(pos_word2))
           neg_word2<- -(sqrt(abs(neg_word2)))
-          
+          # 
           mpmp<-min(length(neg_word2),length(pos_word2))
           neg_word3<-sort(neg_word2,decreasing = T)[1:mpmp]
           pos_word3<-sort(pos_word2,decreasing = F)[1:mpmp]
@@ -547,6 +566,7 @@ for(q in 1:10){
           all_word<-c(pos_word2,neg_word2)
           
           all_word2<-tapply((all_word),names(all_word),sum)
+          lenw<-c(lenw,length(all_word2))
           
           # all_word2<-all_word2[abs(all_word2)  > quantile(abs(all_word2),0.1)]
           all_word2<-all_word2[!names(all_word2) %in% names(ll2)[1:10]]
@@ -554,8 +574,13 @@ for(q in 1:10){
           sort(all_word2,decreasing = T)[1:30]
           sort(all_word2,decreasing = F)[1:30]
           length(neg_word2);length(pos_word2)
-     
+          # 
 
+          #########
+          
+          # num_sample
+          # se2
+          
           # 
           # gc_score<-score[-sam]
           # length(comments)
@@ -573,10 +598,10 @@ for(q in 1:10){
           load("sp_gc_sam.RData")
           table(gc_score)
           gc_score<-ifelse(gc_score>3,1,0)
-          
+          # sp_gc_sam[[i]]
           
           uss<-unique(unlist(sp_gc_sam))
-         
+          
           all_word2<-all_word2[names(all_word2) %in% uss]
           
           won<-c()
@@ -584,105 +609,123 @@ for(q in 1:10){
           
           allc<-c(poc3,neg3)
           allc<-allc[!names(allc) %in% names(ll2)[1:10]]
-          se
-          ##pred_
-          he<-c()
-          se
-          i<-29
-          head(sp_gc_sam)
-          sp_gc_sam[[i]]
-          i
-          matin<-match(sp_gc_sam[[i]], names(all_word2))
-          tt<-table(matin[!is.na(matin)])
-          all_word2[as.numeric(names(tt))]
-          sum(all_word2[as.numeric(names(tt))])
-    # ew   
+    
           
-          matin<-match(sp_gc_sam[[i]], names(allc))
-          tt<-table(matin[!is.na(matin)])
-          allc[as.numeric(names(tt))]
-          sum(allc[as.numeric(names(tt))])
-          se2
           
-          # he
-           for(i in 1:length(sp_gc_sam)){
+          
+          senti<-c()
+          for(i in 1:length(sp_gc_sam)){
             matin<-match(sp_gc_sam[[i]], names(all_word2))
             tt<-table(matin[!is.na(matin)])
             won[i]<- sum(all_word2[as.numeric(names(tt))])
-            
+
             matin<-match(sp_gc_sam[[i]], names(allc))
             tt<-table(matin[!is.na(matin)])
             he[i]<- sum(allc[as.numeric(names(tt))])
+
+            matin<-match(sp_gc_sam[[i]], hash_sentiment_sentiword$x)
+            tt<-table(matin[!is.na(matin)])
+
+            if(nrow(hash_sentiment_sentiword[as.numeric(names(tt))])==0){
+              senti[i]<- 0
+            }else{
+            senti[i]<- sum(hash_sentiment_sentiword[as.numeric(names(tt))][,2])
+            }
           }
-          sum(he==0)
+            sum(he==0)
           he
-          
+
           tet<-ifelse(he >0,1,0)
           table(tet)
           sum(he ==0)
           gc_score3<-gc_score
           se
-          
+
           head(he,30)
           head(won,30)
           se
-          
+          sigm<-function (x)           {
+            1/(1 + exp(-x))         }
+          tet<-sigm(he)
+          tet<-ifelse(tet >0.5,1,0);table(tet)
+
+
           base<-sum(tet==gc_score3)/length(tet);base
           precision<-sum(tet==1 & gc_score3==1)/sum(tet==1) ##precision
           recall<-sum(tet==1 & gc_score3==1)/sum(gc_score3==1) ##recall
-          
+
           base_fm<-2*((precision*recall)/(precision+recall));base_fm
-          
-          
+          roc_obj <- pROC::roc(gc_score3,he)
+          plot.roc(roc_obj)
+          base_fm<-pROC::auc(roc_obj)
+          base_fm
+          won_result<-c(won_result,base)
+          won_result_fm<-c(won_result_fm,base_fm)
 
           # sum(won == 0)
           he[5615]
-          prediction2[5615]
-          prediction2<-ifelse(won +int2>0,1,0);table(prediction2)
+          # prediction2[5615]
+          # won2<-won[won> 0]
+          sigm<-function (x)           {
+            1/(1 + exp(-x))         }
+          prediction<-sigm(won)
+          prediction2<-ifelse(prediction >0.5,1,0);table(prediction2)
+
+
+
+          # prediction2<-ifelse(won >0,1,0);table(prediction2)
           real_score2<-gc_score
-       
-          
+          # anmat<-(prediction2 != prediction)
+          # sum(anmat)
+
           whiwhi<-which(final != 0)
           table(real_score2)
           se
           wonwon<-sum(prediction2 == real_score2[1:length(prediction2)])/length(prediction2);wonwon
           precision<-sum(prediction2==1 & real_score2==1)/sum(prediction2==1) ##precision
           recall<-sum(prediction2==1 & real_score2==1)/sum(real_score2==1) ##recall
-          
+          # 0.892088
           won_fm<-2*((precision*recall)/(precision+recall));won_fm
           la
-          acc2<-c(wonwon,won_fm)
-          
+          library(pROC)
+          roc_obj <- pROC::roc( real_score2,prediction)
+          won_fm<-pROC::auc(roc_obj)
+          won_fm
+          plot.roc(roc_obj)
+          #acc2<-c(wonwon,won_fm)
+
           won_result2<-c(won_result2,wonwon)
           won_result2_fm<-c(won_result2_fm,won_fm)
-          
-          posi_in<- which((tet != prediction2) & (prediction2 == real_score2) & (real_score2 ==1))
-          nega_in<- which((tet != prediction2) & (prediction2 == real_score2) & real_score2 ==0)
-          tet[(posi_in)]
-          prediction2[(posi_in)]
-          real_score2[(posi_in)]
-          
-          
-          k<-7
-          paste(sp_gc_sam[[posi_in[k]]],collapse=" ")
-          matin<-match(sp_gc_sam[[posi_in[k]]], names(all_word2))
-          tt<-table(matin[!is.na(matin)])
-          (all_word2[as.numeric(names(tt))]);sum((all_word2[as.numeric(names(tt))]))
-          matin<-match(sp_gc_sam[[posi_in[k]]], names(allc))
-          tt<-table(matin[!is.na(matin)])
-          (allc[as.numeric(names(tt))]);sum((allc[as.numeric(names(tt))]))
-          
-          
-          k<-17
-          paste(sp_gc_sam[[nega_in[k]]],collapse=" ")
-          matin<-match(sp_gc_sam[[nega_in[k]]], names(all_word2))
-          tt<-table(matin[!is.na(matin)])
-          (all_word2[as.numeric(names(tt))]);sum((all_word2[as.numeric(names(tt))]))
-          matin<-match(sp_gc_sam[[nega_in[k]]], names(allc))
-          tt<-table(matin[!is.na(matin)])
-          (allc[as.numeric(names(tt))]);sum((allc[as.numeric(names(tt))]))
-          
-          # print(fianl_result)
+
+          print(won_result)
+          print(won_result2)
+          print(won_result_fm)
+          print(won_result2_fm)
+          #######+
+          prediction<-sigm(senti)
+          prediction2<-ifelse(prediction >0.5,1,0);table(prediction2)
+
+          # prediction2<-ifelse(senti>0,1,0);table(prediction2)
+          real_score2<-gc_score
+          # anmat<-(prediction2 != prediction)
+          # sum(anmat)
+
+          whiwhi<-which(final != 0)
+          table(real_score2)
+          se
+          wonwon<-sum(prediction2 == real_score2[1:length(prediction2)])/length(prediction2);wonwon
+          precision<-sum(prediction2==1 & real_score2==1)/sum(prediction2==1) ##precision
+          recall<-sum(prediction2==1 & real_score2==1)/sum(real_score2==1) ##recall
+
+          s_fm<-2*((precision*recall)/(precision+recall));s_fm
+          roc_obj <- pROC::roc(real_score2,prediction)
+          s_fm<-pROC::auc(roc_obj)
+          s_fm
+          acc3<-c(wonwon,s_fm)
+
+          sen_result<-c(sen_result,wonwon)
+          sen_result_fm<-c(sen_result_fm,s_fm)
+        
           
           cat("\n",la,"-",se,"-",ww,"-",q)
           if(la == 0){
@@ -690,12 +733,15 @@ for(q in 1:10){
           }else{
             la2<-"lasso"
           }
-          write.csv(acc2,paste0(la2,"-nearest",se,"-",wm,"-",q,"회 실험-all-",round(mean(lasso_result2),4),"-",round(base,4),"-",round(base_fm,4),"-acc",round(wonwon,4),"-f_m",round(won_fm,4),".csv"),row.names=F)
+          write.csv(won_result2_fm,paste0(la2,"-nearest",se,"-",wm,"-",q,"회 실험-all-",round(mean(lasso_result2),4),"-",round(base,4),"-",round(base_fm,4),"-acc",round(wonwon,4),"-f_m",round(won_fm,4),".csv"),row.names=F)
           save(all_word2,file=paste0("png_word_list-",la2,"-",wm,"-nearest",se,"-data",num_sample,"-",q,"회 실험-all-",round(wonwon,4),"-f_m",round(won_fm,4),".RData"))
-              
-    }
-        
-        
+          
+ 
+          
+          
+          
+          
+        }
         
         
         
@@ -703,25 +749,19 @@ for(q in 1:10){
       }
       
       
+     
       
       
       
     }
-    if(la == 0){
-      la2<-"ridge"
-      
-      rid_result<-rbind(rid_result,won_result)
-      rid_result2<-rbind(rid_result2,won_result2) 
-      rid_result3<-rbind(rid_result3,won_result3) 
-      rid_result4<-rbind(rid_result4,won_result4) 
-      rid_result_fm<-rbind(rid_result_fm,won_result_fm) 
-      rid_result2_fm<-rbind(rid_result2_fm,won_result2_fm) 
-      rid_result3_fm<-rbind(rid_result3_fm,won_result3_fm) 
-      rid_result4_fm<-rbind(rid_result4_fm,won_result4_fm) 
-    }else{
+    
+    
+   
+
       la2<-"lasso"
-      
-      
+
+      sen_la_result<-rbind(sen_la_result,sen_result)
+      sen_la_result_fm<-rbind(sen_la_result_fm,sen_result_fm)
       la_result<-rbind(la_result,won_result)
       la_result2<-rbind(la_result2,won_result2) 
       la_result3<-rbind(la_result3,won_result3) 
@@ -731,29 +771,196 @@ for(q in 1:10){
       la_result3_fm<-rbind(la_result3_fm,won_result3_fm) 
       la_result4_fm<-rbind(la_result4_fm,won_result4_fm) 
       
-      
-      
-    }
-    
+
     
     
   }
   
-  
-  
+  ############supervised learning
+  score2<-score[sam]
+
+  # score3<-score2[ss]
+  # table(score3)
+  ims<-which(score2==3)
+
+  score3<-score2[-ims]
+  sp_cos_sh<-str_split(cos2[-ims]," ")
+
+  # sp_cos_sh<-str_split(cos2," ")
+  mean(sapply(sp_cos_sh,length))
+  tas<-table(unlist(sp_cos_sh))
+  head(tas)
+  length(tas)
+
+  tas2<-tas[tas >2]
+  length(tas2)
+
+  length(names(tas2))
+  length(names(toq))
+  names(tas2)[(!names(tas2) %in% names(toq2))]
+
+
+  # tas2<-tas2[names(tas2) %in% name_to]
+
+  tas2<-tas2[!sapply(str_split(names(tas2),""),length)  <= 1]
+
+  tas2<-tas2[!str_detect(names(tas2),"\n|\\)")]
+
+  tas2<-tas2[!str_detect(names(tas2),"\\d")]
+  tas2<- tas2[!names(tas2) %in% c(erw,gun)]
+
+
+  tas3<-tas2[!names(tas2)== ""]
+  nat<-names(tas3)
+
+  dtm<-matrix(c(0),ncol=length(tas3),nrow=(length(ss)))
+  colnames(dtm)<-nat
+  length(nat)
+
+  load("gc_score.RData")
+  load("sp_gc_sam.RData")
+  table(gc_score)
+
+
+  gc_score<-ifelse(gc_score>3,1,0)
+  sp_gc_sam[[i]]
+
+
+  validtm<-matrix(c(0),ncol=length(tas3),nrow=(length(sp_gc_sam)))
+  colnames(validtm)<-nat
+
+  for(i in 1:length(sp_cos_sh)){
+
+    matin<-match(sp_cos_sh[[i]],nat)
+    tt<-table(matin[!is.na(matin)])
+
+    dtm[i,  as.numeric(names(tt))]<-tt
+
+
+  }
+  for(i in 1:length(sp_gc_sam)){
+    matin<-match(sp_gc_sam[[i]],nat)
+    tt<-table(matin[!is.na(matin)])
+    validtm[i,  as.numeric(names(tt))]<-tt
+  }
+
+  whs <- apply(dtm,1,sum) == 0
+  real_dtm2<-dtm[!whs,]
+  sp_cos3<-cos2[!whs]
+  sum(whs)
+  # scorescore3[score3!=3]
+  score_one_word<-      ifelse(score3>3,1,0)[!whs]
+
+  pred<-pre2
+  valid<-gc_score
+  fm<-function(pred,valid){
+    precision<-sum(pred==1 & valid==1)/sum(pred==1) ##precision
+    recall<-sum(pred==1 & valid==1)/sum(valid==1) ##recall
+    won_fm<-2*((precision*recall)/(precision+recall));won_fm
+    won_fm
+  }
+  # install.packages("pROC")
+
+  #############lasso
+  fit2=glmnet(as.matrix(real_dtm2),as.numeric(score_one_word),family="binomial",alpha=1,nlambda=1000)
+  # coef(fit2,s=0.001) # 1이면 lasso
+  ss<-fit2$lambda[length(fit2$lambda)]
+  pre<-predict(fit2,newx=as.matrix(validtm),s=ss) # make predictions
+  pre2<-ifelse(pre > 0,1,0)
+  table(pre2)
+  lasso1<-sum(pre2 == gc_score)/length(pre2);lasso1
+  lasso_fm<-fm(pre2,gc_score);lasso_fm
+
+  roc_obj <- pROC::roc(gc_score,as.numeric(pre2))
+  lasso_fm<-pROC::auc(roc_obj);lasso_fm
+  ############ridge
+  fit2=glmnet(as.matrix(real_dtm2),as.numeric(score_one_word),family="binomial",alpha=0,nlambda=1000)
+  # coef(fit2,s=0.001) # 1이면 lasso
+  ss<-fit2$lambda[length(fit2$lambda)]
+  pre<-predict(fit2,newx=as.matrix(validtm),s=ss) # make predictions
+  pre2<-ifelse(pre > 0,1,0)
+  ridge1<-sum(pre2 == gc_score)/length(pre2);ridge1
+  # ridge_fm<-fm(pre2,gc_score);ridge_fm
+  roc_obj <-pROC::roc(gc_score,as.numeric(pre2) )
+  ridge_fm<-pROC::auc(roc_obj);ridge_fm
+
+
+  ## SVM
+  library(kernlab)
+
+  #polydot
+  # rbfdot
+  svmdtm2<-data.frame(cbind(real_dtm2,score_one_word))
+  colnames(svmdtm2)<-c(paste0("V",1:(ncol(svmdtm2)-1)),"target")
+  colnames(validtm)<-colnames(svmdtm2)[-ncol(svmdtm2)]
+  ### linear
+  irismodel <- ksvm(target~.,data=svmdtm2,type="C-bsvc",
+                    kernel="vanilladot",C=0.001,prob.model=TRUE)
+  irismodel
+  head(validtm)
+  pr<-predict(irismodel, as.matrix(validtm), type="prob")
+  pre2<-ifelse(pr[,2] > 0.5,1,0)
+  svm<-sum(pre2 == gc_score)/length(pre2);svm
+
+
+  roc_obj <-pROC::roc(gc_score,as.numeric(pr[,2]) )
+  svm_fm<-pROC::auc(roc_obj);svm_fm
+
+  #######
+  irismodel <- ksvm(target~.,data=svmdtm2,type="C-bsvc",
+                    kernel="polydot",C=0.001,prob.model=TRUE)
+  irismodel
+  pr<-predict(irismodel, as.matrix(validtm),type="prob")
+  pre2<-ifelse(pr[,2] > 0.5,1,0)
+  svm2<-sum(pre2 == gc_score)/length(pre2);svm2
+
+
+  roc_obj <-pROC::roc(gc_score,as.numeric(pr[,2]) )
+  svm_fm2<-pROC::auc(roc_obj);svm_fm2
+  # pr
+  irismodel <- ksvm(target~.,data=svmdtm2,type="C-bsvc",
+                    kernel="rbfdot",C=0.001,prob.model=TRUE)
+  irismodel
+  pr<-predict(irismodel, as.matrix(validtm), type="prob")
+  pre2<-ifelse(pr[,2] > 0.5,1,0)
+  svm3<-sum(pre2 == gc_score)/length(pre2);svm3
+
+  roc_obj <-pROC::roc(gc_score,as.numeric(pr[,2]) )
+  svm_fm3<-pROC::auc(roc_obj);svm_fm3
+
+
+
+
+
+  library(randomForest)
+
+
+
+  iris.rf <- randomForest(target ~ ., data=svmdtm2, importance=TRUE,do.trace=T,ntree=300,
+                          proximity=TRUE)
+  pr<-predict(iris.rf, (validtm))
+
+  summary(pr)
+  pre2<-ifelse(pr > 0.5,1,0)
+  rf<-sum(pre2 == gc_score)/length(pre2);rf
+
+  library(AUC)
+
+  roc_obj <-pROC::roc(gc_score,pr )
+  rffm<-pROC::auc(roc_obj);rffm
+
+  sv_result<-rbind(sv_result,c(lasso1,ridge1,svm,svm2,svm3,rf))
+  sv_result_fm<-rbind(sv_result_fm,c(lasso_fm,ridge_fm,svm_fm,svm_fm2,svm_fm3,rffm))
+
+  # sen_la_result<-rbind(sen_la_result,c(sen_result,sen_result_fm))
   
 }
 
+lasso_result<-cbind(cbind(la_result,"",la_result_fm),"",
+                    cbind(la_result2,"",la_result2_fm),"",
+                    cbind(sen_la_result,"",sen_la_result_fm))
 
-lasso_result<-cbind(la_result2,"",la_result2_fm)
-
-
-ridge_result<-cbind(rid_result2,"",rid_result2_fm)
-
-final_result<-rbind(lasso_result,"","","",ridge_result)
-
-write.csv(final_result,paste0("final_result_",num_sample,"intercept.csv"),row.names=F)
-
+sv_result<-cbind(sv_result,"",sv_result_fm)
 
 
 
